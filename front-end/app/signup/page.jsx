@@ -1,5 +1,42 @@
+"use client";
+
+import { useState } from "react";
 import { FaTasks } from "react-icons/fa";
 export default function page() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError("All fields are required");
+      return;
+    } else if (password.length < 8) {
+      setError("Password must be more than 8 characters");
+      return;
+    }
+    try {
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+      if (res.ok) {
+        setEmail("");
+        setPassword("");
+      } else {
+        console.log("User registration failed");
+      }
+    } catch (error) {
+      console.log("Error during registration: ", error);
+    }
+  };
   return (
     <div className="flex items-center justify-center py-12 px-7 ">
       <div className="xl:w-[1085px] w-[343px] h-full xl:gap-8 gap-11 flex flex-col ">
@@ -22,10 +59,21 @@ export default function page() {
                 </div>
               </div>
             </div>
-            <form className="w-full grid grid-rows-3 gap-5 ">
+            {error && (
+              <p className="self-start text-xs text-[#d24c42]">{error}</p>
+            )}
+
+            <form
+              onSubmit={handleSubmit}
+              className="w-full grid grid-rows-3 gap-5 "
+            >
               <div className="w-full h-16 border border-[#E6E6E6] rounded-lg p-2 text-neutral">
                 <p className="mb-2 text-xs font-medium ">Email</p>
                 <input
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  value={email}
                   className="w-full placeholder-neutral placeholder-opacity-30 text-sm outline-none"
                   type="text"
                   placeholder="Enter your email..."
@@ -34,6 +82,10 @@ export default function page() {
               <div className="w-full h-16 border border-[#E6E6E6] rounded-lg p-2 text-neutral">
                 <p className="mb-2 text-xs  font-medium ">Password</p>
                 <input
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  value={password}
                   className="w-full placeholder-neutral placeholder-opacity-30 outline-none text-sm  "
                   type="password"
                   placeholder="Enter your password..."
