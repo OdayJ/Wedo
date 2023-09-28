@@ -9,6 +9,7 @@ export default function Nav() {
   const currentPage = usePathname();
   if (currentPage == "/signup") return <></>;
   if (currentPage == "/signin") return <></>;
+  if (currentPage == "/") return <></>;
   return (
     <div className="flex flex-col fixed w-full pointer-events-none">
       <div className="w-full h-12 px-12 py-2 bg-primary flex justify-between select-none pointer-events-auto">

@@ -1,12 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaTasks } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+
 export default function page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { data: session } = useSession();
+  const router = useRouter();
 
+  useEffect(() => {
+    if (session) {
+      router.replace("/feed"); // or wherever you want to redirect to
+    }
+  }, [session]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -17,19 +27,27 @@ export default function page() {
       return;
     }
     try {
-      const res = await fetch("/api/signup", {
+      const data = {
+        email: email,
+        password: password,
+      };
+      const res = await fetch("http://localhost:3001/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify(data),
       });
+      const result = await res.json();
+      if (result == -1) {
+        console.log(result);
+        setError("User Already exists");
+        return;
+      }
       if (res.ok) {
         setEmail("");
         setPassword("");
+        router.push("/signin");
       } else {
         console.log("User registration failed");
       }
