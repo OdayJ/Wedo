@@ -5,6 +5,7 @@ import Nav from "@/app/components/Nav";
 
 export default async function page({ params }) {
   const project = await fetchProject(params);
+  console.log(project.tasks);
 
   return (
     <>
@@ -16,15 +17,11 @@ export default async function page({ params }) {
         </div>
         <p className=" text-xl font-semibold mb-4">Tasks</p>
         <div className="flex flex-col gap-3 mb-4">
-          <Task />
-          <Task />
-          <Task />
-          <Task />
-          <Task />
-          <Task />
-          <Task />
+          {project.tasks.map((task) => (
+            <Task key={task._id} text={task.text} />
+          ))}
         </div>
-        <NewTask />
+        <NewTask projectId={params.id} />
       </div>
     </>
   );
@@ -33,7 +30,8 @@ export default async function page({ params }) {
 const fetchProject = async (params) => {
   const projectId = params.id;
   const res = await fetch(
-    `http://localhost:3001/api/getProject?projectId=${projectId}`
+    `http://localhost:3001/api/getProject?projectId=${projectId}`,
+    { next: { cache: "no-store", revalidate: 0 } }
   );
   if (!res.ok) {
     throw new Error("Failed to fetch project");

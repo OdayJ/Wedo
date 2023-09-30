@@ -1,30 +1,35 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AssignTo from "./AssignTo";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-export default function NewTask() {
-  const [clicked, setClicked] = useState([]);
+async function addTask(projectId, task, session, refresh) {
+  const data = {
+    projectId: projectId,
+    text: task,
+    status: "pending",
+    createdBy: session?.user?.email,
+    assignedTo: [""],
+  };
+  await fetch("http://localhost:3001/api/createTask", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  refresh();
+}
+export default function NewTask({ projectId }) {
+  const { data: session } = useSession();
   const [task, setTask] = useState("");
-
-  const handleAssignClick = (name) => {
-    setClicked((prevClicked) => {
-      if (prevClicked.includes(name)) {
-        return prevClicked.filter((item) => item !== name);
-      } else {
-        return [...prevClicked, name];
-      }
-    });
-  };
-  const handleSubmit = () => {
-    // Handling the submit, probably create a task depends on who the user is via session.user and thrn
-  };
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   return (
     <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        handleSubmit();
-      }}
+      onSubmit={(e) => addTask(projectId, task, session, router.refresh)}
       className="w-[844px] h-24 flex border border-[#e6e6e6] rounded-lg p-4 justify-between"
     >
       <div className="flex flex-col justify-between w-full">
