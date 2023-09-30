@@ -30,8 +30,7 @@ export default async function page({ params }) {
 const fetchProject = async (params) => {
   const projectId = params.id;
   const res = await fetch(
-    `http://localhost:3001/api/getProject?projectId=${projectId}`,
-    { next: { cache: "no-store", revalidate: 0 } }
+    `http://localhost:3001/api/getProject?projectId=${projectId}`
   );
   if (!res.ok) {
     throw new Error("Failed to fetch project");
