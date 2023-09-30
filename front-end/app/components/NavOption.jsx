@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function NavOption({ icon, title }) {
+export default function NavOption({ icon, title, id }) {
   const currentPage = usePathname();
 
   return (
@@ -21,10 +21,14 @@ export default function NavOption({ icon, title }) {
           </div>
         </Link>
       ) : (
-        <Link href={{ pathname: `/projects/${title.replace(" ", "-")}` }}>
+        <Link
+          href={{
+            pathname: `/projects/${id}`,
+          }}
+        >
           <div
             className={
-              currentPage == `/projects/${title.replace(" ", "-")}`
+              currentPage == `/projects/${id}`
                 ? "rounded-md h-10 w-60 text-lg bg-[#EEEEEE] flex gap-4 items-center px-4"
                 : "rounded-md h-10 w-60 text-lg  flex gap-4 items-center px-4 hover:bg-[#eee]"
             }
