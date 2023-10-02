@@ -275,7 +275,56 @@ router.put("/updateTaskStatus", async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+router.put("/pinProject", async (req, res) => {
+  try {
+    const { projectId, email } = req.body;
 
+    if (!projectId || !email) {
+      return res
+        .status(400)
+        .json({ error: "Both project ID and task ID are required" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.pinned.push(projectId);
+    await user.save();
+
+    return res.status(200).json({ message: "Project pinned successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+router.put("/unPinProject", async (req, res) => {
+  try {
+    const { projectId, email } = req.body;
+
+    if (!projectId || !email) {
+      return res
+        .status(400)
+        .json({ error: "Both project ID and task ID are required" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.pinned.pop(projectId);
+    await user.save();
+
+    return res.status(200).json({ message: "Project pinned successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 export { router };
 
 export { router as projectRouter };

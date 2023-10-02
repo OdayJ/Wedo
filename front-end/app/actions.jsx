@@ -80,3 +80,49 @@ export async function updateTaskStatus(prevState, formData) {
     return { message: "Failed to update task status" };
   }
 }
+
+export async function pinProject(prevState, formData) {
+  const data = {
+    projectId: formData.get("projectId"),
+    email: formData.get("email"),
+  };
+  console.log(data);
+  if (!data.projectId || !data.email) return { message: "Missing data" };
+
+  try {
+    await fetch("http://localhost:3001/api/pinProject", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    revalidatePath(`/projects/${data.projectId}`);
+    return { message: `Updated user ${data.email}` };
+  } catch (e) {
+    return { message: "Failed to update user" };
+  }
+}
+
+export async function unPinProject(prevState, formData) {
+  const data = {
+    projectId: formData.get("projectId"),
+    email: formData.get("email"),
+  };
+  console.log(data);
+  if (!data.projectId || !data.email) return { message: "Missing data" };
+
+  try {
+    await fetch("http://localhost:3001/api/unPinProject", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    revalidatePath(`/projects/${data.projectId}`);
+    return { message: `Updated user ${data.email}` };
+  } catch (e) {
+    return { message: "Failed to update user" };
+  }
+}

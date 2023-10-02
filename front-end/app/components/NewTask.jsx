@@ -35,7 +35,6 @@ export default function NewTask({ projectId }) {
     <form
       action={formAction}
       onSubmit={() => setTask("")}
-      // onSubmit={(e) => addTask(projectId, task, session, router.refresh)}
       className="w-[844px] h-24 flex border border-[#e6e6e6] rounded-lg p-4 justify-between"
     >
       <input type="hidden" name="projectId" value={projectId} />
@@ -50,9 +49,6 @@ export default function NewTask({ projectId }) {
           placeholder="Enter your task here..."
           className=" w-full placeholder-neutral placeholder-opacity-50 outline-none"
         />
-        {/* <div className="flex gap-4 items-center text-center ">
-          <p className="opacity-50 text-sm text-neutral">Assign to : </p>
-        </div> */}
       </div>
       <div className="grid place-items-end">
         <SubmitButton />
