@@ -7,23 +7,6 @@ import { experimental_useFormState as useFormState } from "react-dom";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";
 import { createTodo } from "@/app/actions";
 
-// async function addTask(projectId, task, session, refresh) {
-//   const data = {
-// projectId: projectId,
-// text: task,
-// status: "pending",
-// createdBy: session?.user?.email,
-// assignedTo: [""],
-//   };
-//   await fetch("http://localhost:3001/api/createTask", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   });
-//   refresh();
-// }
 const initialState = {
   message: null,
 };
@@ -67,9 +50,9 @@ export default function NewTask({ projectId }) {
           placeholder="Enter your task here..."
           className=" w-full placeholder-neutral placeholder-opacity-50 outline-none"
         />
-        <div className="flex gap-4 items-center text-center ">
+        {/* <div className="flex gap-4 items-center text-center ">
           <p className="opacity-50 text-sm text-neutral">Assign to : </p>
-        </div>
+        </div> */}
       </div>
       <div className="grid place-items-end">
         <SubmitButton />

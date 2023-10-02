@@ -1,4 +1,5 @@
 import { AuthProvider } from "./Providers";
+import Hydrate from "./components/Hydrate";
 import "./globals.css";
 import { Inter } from "next/font/google";
 
@@ -13,7 +14,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <Hydrate>
+          <AuthProvider>{children}</AuthProvider>
+        </Hydrate>
       </body>
     </html>
   );

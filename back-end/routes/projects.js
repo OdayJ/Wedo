@@ -14,6 +14,20 @@ const router = express.Router();
    */
 }
 router.post("/createProject", async (req, res) => {
+  const colors = [
+    "#ff6b6b",
+    "#f06595",
+    "#cc5de8",
+    "#5c7cfa",
+    "#339af0",
+    "#22b8cf",
+    "#20c997",
+    "#51cf66",
+    "#fcc419",
+    "#ff922b",
+  ];
+  const r = Math.floor(Math.random() * 10);
+  const newColor = colors[r];
   try {
     const { name, createdBy, date } = req.body;
     if (!name || !createdBy) {
@@ -21,7 +35,12 @@ router.post("/createProject", async (req, res) => {
         .status(400)
         .json({ message: "Both name and createdBy are required " });
     }
-    const newProject = await Project.create({ name, date, users: [createdBy] });
+    const newProject = await Project.create({
+      name,
+      date,
+      users: [createdBy],
+      color: newColor,
+    });
 
     return res.json(newProject);
   } catch (error) {
@@ -180,4 +199,89 @@ router.put("/completeTask", async (req, res) => {
   }
 });
 
+router.get("/nearestProjects", async (req, res) => {
+  try {
+    // Assuming you are sending user's email or ID in the request query
+    const userEmail = req.query.email;
+    if (!userEmail) {
+      return res.status(400).json({ error: "User email is required" });
+    }
+
+    // Fetch the user based on the email or ID (you could also directly use the ID in the project query if you have it)
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const currentDate = new Date();
+    const formattedDate =
+      currentDate.getDate().toString().padStart(2, "0") +
+      "/" +
+      (currentDate.getMonth() + 1).toString().padStart(2, "0") +
+      "/" +
+      currentDate.getFullYear().toString().slice(-2);
+
+    const projects = await Project.find({
+      date: { $gte: formattedDate },
+      users: user._id,
+    });
+
+    // Sort projects based on the date using JavaScript
+    projects.sort((a, b) => {
+      return (
+        convertStringToDate(b.date).getTime() -
+        convertStringToDate(a.date).getTime()
+      );
+    });
+
+    return res.json(projects.slice(0, 3));
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+router.put("/updateTaskStatus", async (req, res) => {
+  try {
+    const { projectId, taskId } = req.body;
+
+    if (!projectId || !taskId) {
+      return res
+        .status(400)
+        .json({ error: "Both project ID and task ID are required" });
+    }
+
+    const project = await Project.findById(projectId);
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    const task = project.tasks.id(taskId);
+
+    if (!task) {
+      return res
+        .status(404)
+        .json({ error: "Task not found within the given project" });
+    }
+
+    task.status = "completed";
+    await project.save();
+
+    return res
+      .status(200)
+      .json({ message: "Task status updated successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+export { router };
+
 export { router as projectRouter };
+
+// Utils
+const convertStringToDate = (str) => {
+  const [day, month, year] = str.split("/");
+  return new Date(`20${year}-${month}-${day}`);
+};

@@ -27,6 +27,9 @@ const ProjectSchema = new mongoose.Schema({
   date: {
     type: String,
   },
+  color: {
+    type: String,
+  },
   users: [
     {
       type: mongoose.Schema.Types.ObjectId,

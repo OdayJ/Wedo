@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function NavOption({ icon, title, id }) {
+export default function NavOption({ icon, title, id, color }) {
   const currentPage = usePathname();
 
   return (
@@ -33,7 +34,12 @@ export default function NavOption({ icon, title, id }) {
                 : "rounded-md h-10 w-60 text-lg  flex gap-4 items-center px-4 hover:bg-[#eee]"
             }
           >
-            <div className="text-2xl">{icon}</div>
+            {color && (
+              <div
+                style={{ backgroundColor: color }}
+                className="text-2xl w-4 h-4 rounded-lg"
+              ></div>
+            )}
             <div>{title}</div>
           </div>
         </Link>

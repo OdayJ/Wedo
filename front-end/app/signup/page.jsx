@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { FaTasks } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const { data: session } = useSession();
   const router = useRouter();
@@ -30,6 +32,7 @@ export default function page() {
       const data = {
         email: email,
         password: password,
+        name: name,
       };
       const res = await fetch("http://localhost:3001/api/signup", {
         method: "POST",
@@ -58,12 +61,14 @@ export default function page() {
   return (
     <div className="flex items-center justify-center py-12 px-7 ">
       <div className="xl:w-[1085px] w-[343px] h-full xl:gap-8 gap-11 flex flex-col ">
-        <div className="flex gap-4 ">
-          <FaTasks fill="#845EF7" size={45} />
-          <p className="  flex items-center text-primary font-bold text-2xl">
-            Wedo
-          </p>
-        </div>
+        <Link href="/">
+          <div className="flex gap-4 ">
+            <FaTasks fill="#845EF7" size={45} />
+            <p className="  flex items-center text-primary font-bold text-2xl">
+              Wedo
+            </p>
+          </div>
+        </Link>
         <div className="grid self-start grid-cols-5 place-items-center">
           <div className="w-full xl:w-2/3 justify-self-start h-full col-span-5 xl:col-span-3  md:p-0  flex flex-col  justify-center items-center gap-4 text-neutral font-poppins">
             <div className="mb-7 self-start flex flex-col gap-11 ">
@@ -83,8 +88,20 @@ export default function page() {
 
             <form
               onSubmit={handleSubmit}
-              className="w-full grid grid-rows-3 gap-5 "
+              className="w-full grid grid-rows-4 gap-5 "
             >
+              <div className="w-full h-16 border border-[#E6E6E6] rounded-lg p-2 text-neutral">
+                <p className="mb-2 text-xs  font-medium ">Name</p>
+                <input
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                  value={name}
+                  className="w-full placeholder-neutral placeholder-opacity-30 outline-none text-sm  "
+                  type="text"
+                  placeholder="Enter your name"
+                />
+              </div>
               <div className="w-full h-16 border border-[#E6E6E6] rounded-lg p-2 text-neutral">
                 <p className="mb-2 text-xs font-medium ">Email</p>
                 <input

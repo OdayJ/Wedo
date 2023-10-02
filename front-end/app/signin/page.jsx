@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { FaTasks } from "react-icons/fa";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function page() {
   const [email, setEmail] = useState("");
@@ -38,12 +39,14 @@ export default function page() {
   return (
     <div className="flex items-center justify-center py-12 px-7 ">
       <div className="w-[343px] h-full xl:w-[1085px] gap-11  xl:gap-8 flex flex-col ">
-        <div className="flex gap-4 ">
-          <FaTasks fill="#845EF7" size={45} />
-          <p className="  flex items-center text-primary font-bold text-2xl">
-            Wedo
-          </p>
-        </div>
+        <Link href="/">
+          <div className="flex gap-4 ">
+            <FaTasks fill="#845EF7" size={45} />
+            <p className="  flex items-center text-primary font-bold text-2xl">
+              Wedo
+            </p>
+          </div>
+        </Link>
         <div className=" self-start grid  grid-cols-5 place-items-center">
           <div className="w-full h-full xl:w-2/3 justify-self-start  col-span-5 xl:col-span-3   flex flex-col  justify-center items-center gap-4 text-neutral font-poppins">
             <div className="mb-7 self-start flex flex-col gap-11 ">
